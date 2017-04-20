@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Net.Chdk.Model.Card;
 using System.IO;
 
 namespace Net.Chdk.Detectors
@@ -16,9 +17,9 @@ namespace Net.Chdk.Detectors
 
         protected abstract string FileName { get; }
 
-        protected TValue GetValue(string driveLetter)
+        protected TValue GetValue(CardInfo cardInfo)
         {
-            var metadataPath = Path.Combine(driveLetter, "METADATA");
+            var metadataPath = Path.Combine(cardInfo.DriveLetter, "METADATA");
             var filePath = Path.Combine(metadataPath, FileName);
             if (!File.Exists(filePath))
                 return null;

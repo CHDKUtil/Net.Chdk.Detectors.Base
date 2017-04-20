@@ -64,6 +64,10 @@
       <Project>{6C183A9C-30C1-47E5-9016-48890EC8ABA2}</Project>
       <Name>Net.Chdk.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Net.Chdk.Model.Card\src\Net.Chdk.Model.Card\Net.Chdk.Model.Card.csproj">
+      <Project>{a41d61fe-2fb8-4892-ac7d-ecee7e61c637}</Project>
+      <Name>Net.Chdk.Model.Card</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
