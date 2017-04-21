@@ -19,7 +19,8 @@ namespace Net.Chdk.Detectors
 
         protected TValue GetValue(CardInfo cardInfo)
         {
-            var metadataPath = Path.Combine(cardInfo.DriveLetter, "METADATA");
+            var rootPath = cardInfo.GetRootPath();
+            var metadataPath = Path.Combine(rootPath, "METADATA");
             var filePath = Path.Combine(metadataPath, FileName);
             if (!File.Exists(filePath))
                 return null;
