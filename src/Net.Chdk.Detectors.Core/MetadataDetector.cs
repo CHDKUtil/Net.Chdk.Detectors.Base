@@ -22,7 +22,10 @@ namespace Net.Chdk.Detectors
             string metadataPath = cardInfo.GetMetadataPath();
             var filePath = Path.Combine(metadataPath, FileName);
             if (!File.Exists(filePath))
+            {
+                Logger.LogTrace("{0} not found", filePath);
                 return null;
+            }
 
             Logger.LogInformation("Reading {0}", filePath);
 
