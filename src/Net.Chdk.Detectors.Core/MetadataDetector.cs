@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Net.Chdk.Model.Card;
+using Newtonsoft.Json;
 using System.IO;
 
 namespace Net.Chdk.Detectors
@@ -31,7 +32,15 @@ namespace Net.Chdk.Detectors
 
             using (var stream = File.OpenRead(filePath))
             {
-                return JsonObject.Deserialize<TValue>(stream);
+                try
+                {
+                    return JsonObject.Deserialize<TValue>(stream);
+                }
+                catch (JsonException ex)
+                {
+                    Logger.LogError(0, ex, "Error deserializing");
+                    throw;
+                }
             }
         }
     }
