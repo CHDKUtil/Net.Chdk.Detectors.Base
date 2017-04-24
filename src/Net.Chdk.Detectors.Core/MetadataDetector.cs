@@ -39,7 +39,7 @@ namespace Net.Chdk.Detectors
                 catch (JsonException ex)
                 {
                     Logger.LogError(0, ex, "Error deserializing");
-                    throw;
+                    return null;
                 }
             }
         }
