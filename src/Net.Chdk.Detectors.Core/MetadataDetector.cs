@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Net.Chdk.Model.Card;
+using Net.Chdk.Validators;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 
 namespace Net.Chdk.Detectors
@@ -11,16 +13,19 @@ namespace Net.Chdk.Detectors
     {
         protected ILogger Logger { get; }
 
-        protected MetadataDetector(ILoggerFactory loggerFactory)
+        private IValidator<TValue> Validator { get; }
+
+        protected MetadataDetector(IValidator<TValue> validator, ILoggerFactory loggerFactory)
         {
             Logger = loggerFactory.CreateLogger<TDetector>();
+            Validator = validator;
         }
 
         protected abstract string FileName { get; }
 
         protected TValue GetValue(CardInfo cardInfo)
         {
-            string metadataPath = cardInfo.GetMetadataPath();
+            var metadataPath = cardInfo.GetMetadataPath();
             var filePath = Path.Combine(metadataPath, FileName);
             if (!File.Exists(filePath))
             {
@@ -28,6 +33,19 @@ namespace Net.Chdk.Detectors
                 return null;
             }
 
+            var value = ReadValue(filePath);
+            if (value == null)
+                return null;
+
+            var basePath = cardInfo.GetRootPath();
+            if (!TryValidate(value, basePath))
+                return null;
+
+            return value;
+        }
+
+        private TValue ReadValue(string filePath)
+        {
             Logger.LogInformation("Reading {0}", filePath);
 
             using (var stream = File.OpenRead(filePath))
@@ -38,9 +56,25 @@ namespace Net.Chdk.Detectors
                 }
                 catch (JsonException ex)
                 {
-                    Logger.LogError(0, ex, "Error deserializing");
+                    Logger.LogError(0, ex, "Deserialization error");
                     return null;
                 }
+            }
+        }
+
+        private bool TryValidate(TValue value, string basePath)
+        {
+            Logger.LogTrace("Validating");
+
+            try
+            {
+                Validator.Validate(value, basePath);
+                return true;
+            }
+            catch (ValidationException ex)
+            {
+                Logger.LogError(0, ex, "Validation error");
+                return false;
             }
         }
     }
