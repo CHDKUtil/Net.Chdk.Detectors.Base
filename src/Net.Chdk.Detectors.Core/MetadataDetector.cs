@@ -64,7 +64,7 @@ namespace Net.Chdk.Detectors
 
         private bool TryValidate(TValue value, string basePath)
         {
-            Logger.LogTrace("Validating");
+            Logger.LogTrace("Validating {0}", typeof(TValue).Name);
 
             try
             {
