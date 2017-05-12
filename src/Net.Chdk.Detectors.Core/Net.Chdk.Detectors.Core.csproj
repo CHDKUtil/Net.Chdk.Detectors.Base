@@ -69,6 +69,10 @@
       <Project>{6C183A9C-30C1-47E5-9016-48890EC8ABA2}</Project>
       <Name>Net.Chdk.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Net.Chdk.Json\src\Net.Chdk.Json\Net.Chdk.Json.csproj">
+      <Project>{bc3c0d74-5a68-4791-be4b-8b2bc724c0ec}</Project>
+      <Name>Net.Chdk.Json</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Net.Chdk.Model.Card\src\Net.Chdk.Model.Card\Net.Chdk.Model.Card.csproj">
       <Project>{a41d61fe-2fb8-4892-ac7d-ecee7e61c637}</Project>
       <Name>Net.Chdk.Model.Card</Name>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Net.Chdk.Json;
 using Net.Chdk.Model.Card;
 using Net.Chdk.Validators;
 using Newtonsoft.Json;
