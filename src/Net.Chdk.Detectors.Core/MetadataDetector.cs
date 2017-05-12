@@ -25,8 +25,8 @@ namespace Net.Chdk.Detectors
 
         protected TValue GetValue(CardInfo cardInfo)
         {
-            var metadataPath = cardInfo.GetMetadataPath();
-            var filePath = Path.Combine(metadataPath, FileName);
+            var basePath = cardInfo.GetRootPath();
+            var filePath = Path.Combine(basePath, Directories.Metadata, FileName);
             if (!File.Exists(filePath))
             {
                 Logger.LogTrace("{0} not found", filePath);
@@ -37,7 +37,6 @@ namespace Net.Chdk.Detectors
             if (value == null)
                 return null;
 
-            var basePath = cardInfo.GetRootPath();
             if (!TryValidate(value, basePath))
                 return null;
 
