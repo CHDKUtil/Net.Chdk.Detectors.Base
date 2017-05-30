@@ -3,6 +3,7 @@ using Net.Chdk.Json;
 using Net.Chdk.Model.Card;
 using Net.Chdk.Validators;
 using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 
@@ -24,7 +25,7 @@ namespace Net.Chdk.Detectors
 
         protected abstract string FileName { get; }
 
-        protected TValue GetValue(CardInfo cardInfo)
+        protected TValue GetValue(CardInfo cardInfo, IProgress<double> progress)
         {
             var basePath = cardInfo.GetRootPath();
             var filePath = Path.Combine(basePath, Directories.Metadata, FileName);
@@ -38,7 +39,7 @@ namespace Net.Chdk.Detectors
             if (value == null)
                 return null;
 
-            if (!TryValidate(value, basePath))
+            if (!TryValidate(value, basePath, progress))
                 return null;
 
             return value;
@@ -62,13 +63,13 @@ namespace Net.Chdk.Detectors
             }
         }
 
-        private bool TryValidate(TValue value, string basePath)
+        private bool TryValidate(TValue value, string basePath, IProgress<double> progress)
         {
             Logger.LogTrace("Validating {0}", typeof(TValue).Name);
 
             try
             {
-                Validator.Validate(value, basePath);
+                Validator.Validate(value, basePath, progress);
                 return true;
             }
             catch (ValidationException ex)
