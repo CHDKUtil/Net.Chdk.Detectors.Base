@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Threading;
 
 namespace Net.Chdk.Detectors
 {
@@ -26,21 +27,21 @@ namespace Net.Chdk.Detectors
         protected abstract string FileName { get; }
 
         [Obsolete]
-        protected TValue GetValue(CardInfo cardInfo, IProgress<double> progress)
+        protected TValue GetValue(CardInfo cardInfo, IProgress<double> progress, CancellationToken token)
         {
             var basePath = cardInfo.GetRootPath();
             var filePath = Path.Combine(basePath, Directories.Metadata, FileName);
-            return GetValue(basePath, filePath, progress);
+            return GetValue(basePath, filePath, progress, token);
         }
 
-        protected TValue GetValue(CardInfo cardInfo, string categoryName, IProgress<double> progress)
+        protected TValue GetValue(CardInfo cardInfo, string categoryName, IProgress<double> progress, CancellationToken token)
         {
             var basePath = cardInfo.GetRootPath();
             var filePath = Path.Combine(basePath, Directories.Metadata, categoryName, FileName);
-            return GetValue(basePath, filePath, progress);
+            return GetValue(basePath, filePath, progress, token);
         }
 
-        private TValue GetValue(string basePath, string filePath, IProgress<double> progress)
+        private TValue GetValue(string basePath, string filePath, IProgress<double> progress, CancellationToken token)
         {
             if (!File.Exists(filePath))
             {
@@ -52,7 +53,7 @@ namespace Net.Chdk.Detectors
             if (value == null)
                 return null;
 
-            if (!TryValidate(value, basePath, progress))
+            if (!TryValidate(value, basePath, progress, token))
                 return null;
 
             return value;
@@ -76,13 +77,13 @@ namespace Net.Chdk.Detectors
             }
         }
 
-        private bool TryValidate(TValue value, string basePath, IProgress<double> progress)
+        private bool TryValidate(TValue value, string basePath, IProgress<double> progress, CancellationToken token)
         {
             Logger.LogTrace("Validating {0}", typeof(TValue).Name);
 
             try
             {
-                Validator.Validate(value, basePath, progress);
+                Validator.Validate(value, basePath, progress, token);
                 return true;
             }
             catch (ValidationException ex)
