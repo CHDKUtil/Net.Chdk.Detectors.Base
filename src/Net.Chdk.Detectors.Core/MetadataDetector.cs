@@ -25,10 +25,23 @@ namespace Net.Chdk.Detectors
 
         protected abstract string FileName { get; }
 
+        [Obsolete]
         protected TValue GetValue(CardInfo cardInfo, IProgress<double> progress)
         {
             var basePath = cardInfo.GetRootPath();
             var filePath = Path.Combine(basePath, Directories.Metadata, FileName);
+            return GetValue(basePath, filePath, progress);
+        }
+
+        protected TValue GetValue(CardInfo cardInfo, string categoryName, IProgress<double> progress)
+        {
+            var basePath = cardInfo.GetRootPath();
+            var filePath = Path.Combine(basePath, Directories.Metadata, categoryName, FileName);
+            return GetValue(basePath, filePath, progress);
+        }
+
+        private TValue GetValue(string basePath, string filePath, IProgress<double> progress)
+        {
             if (!File.Exists(filePath))
             {
                 Logger.LogTrace("{0} not found", filePath);
