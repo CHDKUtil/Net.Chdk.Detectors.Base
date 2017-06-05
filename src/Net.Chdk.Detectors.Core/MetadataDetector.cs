@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Net.Chdk.Json;
 using Net.Chdk.Model.Card;
-using Net.Chdk.Model.Software;
+using Net.Chdk.Model.Category;
 using Net.Chdk.Validators;
 using Newtonsoft.Json;
 using System;
@@ -35,7 +35,7 @@ namespace Net.Chdk.Detectors
             return GetValue(basePath, filePath, progress, token);
         }
 
-        protected TValue GetValue(string basePath, SoftwareCategoryInfo category, IProgress<double> progress, CancellationToken token)
+        protected TValue GetValue(string basePath, CategoryInfo category, IProgress<double> progress, CancellationToken token)
         {
             var filePath = Path.Combine(basePath, Directories.Metadata, category.Name, FileName);
             return GetValue(basePath, filePath, progress, token);
