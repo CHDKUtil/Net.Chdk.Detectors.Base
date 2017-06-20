@@ -41,7 +41,7 @@ namespace Net.Chdk.Detectors
             return GetValue(basePath, filePath, progress, token);
         }
 
-        private TValue GetValue(string basePath, string filePath, IProgress<double> progress, CancellationToken token)
+        protected TValue GetValue(string basePath, string filePath, IProgress<double> progress, CancellationToken token)
         {
             if (!File.Exists(filePath))
             {
@@ -52,6 +52,12 @@ namespace Net.Chdk.Detectors
             var value = ReadValue(filePath);
             if (value == null)
                 return null;
+
+            if (basePath == null)
+            {
+                Logger.LogTrace("Skipping {0} validation", filePath);
+                return value;
+            }
 
             if (!TryValidate(value, basePath, progress, token))
                 return null;
